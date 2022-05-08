@@ -1,0 +1,6 @@
+[book]
+authors = ["RobWalt"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Lubeck"
