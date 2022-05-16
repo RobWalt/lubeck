@@ -15,3 +15,13 @@ A secondary goal is the creation of a book which not only documents the library
 and its components but at the same functions as a learning resource for people
 who want to get their feet wet with functional programming in general and have
 no prior experience.
+
+# Similar crates 
+
+While searching for similar crates I stumbled upon these honorable mentions
+(which seem to be unmaintained unfortunately):
+
+- [fp-core.rs](https://github.com/JasonShin/fp-core.rs)
+- [haskell_bits](https://github.com/clintonmead/haskell_bits)
+- [frunk](https://github.com/lloydmeta/frunk)
+- [functional](https://crates.io/crates/functional/0.0.7)
