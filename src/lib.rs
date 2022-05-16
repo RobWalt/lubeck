@@ -74,7 +74,7 @@ impl<T> HKTLight<T> for Option<T> {
 
 impl<In, Out> Functor<In, Out> for Option<In> {
     fn fmap(self, f: Self::FunctionType) -> Self::OutputType {
-        self.map(|x| f(x))
+        self.map(f)
     }
 }
 
@@ -97,6 +97,6 @@ impl<T> Return<T> for Option<T> {}
 
 impl<In, Out> Monad<In, Out> for Option<In> {
     fn bind(self, f: Self::LiftingFunctionType) -> <Self as HKT<In, Out>>::OutputType {
-        self.map(|x| f(x)).flatten()
+        self.and_then(f)
     }
 }
