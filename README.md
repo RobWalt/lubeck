@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="./lubeck_logo.png" />
+</div>
+
 # Goals
 This repository tries to continue the work started in
 [JasonShin's](https://github.com/JasonShin) crate
