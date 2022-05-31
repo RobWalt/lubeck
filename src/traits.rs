@@ -1,10 +1,15 @@
 pub trait SemiGroup {
+    #[must_use]
     fn mappend(self, other: Self) -> Self;
 }
 
 pub trait Monoid: SemiGroup {
     fn mempty() -> Self;
-    fn mappend(self, other: Self) -> Self where Self: Sized {
+    #[must_use]
+    fn mappend(self, other: Self) -> Self
+    where
+        Self: Sized,
+    {
         SemiGroup::mappend(self, other)
     }
 }
