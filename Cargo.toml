@@ -2,6 +2,14 @@
 name = "lubeck"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+keywords = ["functional programming", "haskell", "fp", "monads"]
+authors = ["Robert Walter <robwalter96@gmail.com>"]
+description = "Yet another functional programming framework written in cutting edge rust"
+homepage = "https://github.com/RobWalt/lubeck"
+repository = "https://github.com/RobWalt/lubeck"
+documentation = "https://docs.rs/lubeck"
+readme = "README.md"
 
 [dependencies]
 paste = "1.0"
