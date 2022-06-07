@@ -4,7 +4,7 @@ use crate::traits::Functor;
 impl<'a, In, Out> Functor<'a, In, Out> for Option<In> {
     fn fmap<F>(self, f: F) -> Self::OutputType
     where
-        F: Fn(In) -> Out,
+        F: FnOnce(In) -> Out,
     {
         self.map(f)
     }
@@ -15,11 +15,10 @@ impl<'a, StateType: 'a, InActionType: 'a, OutActionType: 'a>
 {
     fn fmap<F>(self, f: F) -> Self::OutputType
     where
-        F: Fn(InActionType) -> OutActionType + 'a,
+        F: FnOnce(InActionType) -> OutActionType + 'a,
     {
-        let inner = self.run_state;
-        Self::OutputType::crate_intern_new(Box::new(move |state: StateType| {
-            let (inner_action, inner_state) = inner(state);
+        Self::OutputType::crate_intern_new(Box::new(|state: StateType| {
+            let (inner_action, inner_state) = self.run(state);
             let action = f(inner_action);
             (action, inner_state)
         }))

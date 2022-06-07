@@ -28,7 +28,7 @@ pub trait HKTLight<T> {
 pub trait Functor<'a, In, Out>: HKT<In, Out> {
     fn fmap<F>(self, f: F) -> Self::OutputType
     where
-        F: Fn(In) -> Out + 'a;
+        F: FnOnce(In) -> Out + 'a;
 }
 
 pub trait Pure<T>: HKTLight<T> {

@@ -17,6 +17,10 @@ impl<'a, StateType, InActionType, OutActionType> HKT<InActionType, OutActionType
 {
     type InputType = Self;
     type OutputType = State<'a, StateType, OutActionType>;
-    type FunctionContextType = State<'a, StateType, fn(InActionType) -> OutActionType>;
-    type LiftingFunctionType = Box<dyn Fn(InActionType) -> State<'a, StateType, OutActionType>>;
+    type FunctionContextType = State<'a, StateType, Box<dyn FnOnce(InActionType) -> OutActionType>>;
+    type LiftingFunctionType = fn(InActionType) -> State<'a, StateType, OutActionType>;
+}
+
+impl<'a, S, T> HKTLight<T> for State<'a, S, T> {
+    type OutputType = Self;
 }
