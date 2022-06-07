@@ -19,18 +19,16 @@ pub trait HKT<In, Out> {
     type OutputType;
     type FunctionContextType;
     type LiftingFunctionType;
-
-    type FunctionType;
-    //TODO: use unstable default associated types
-    //type FunctionType = fn(In) -> Out;
 }
 
 pub trait HKTLight<T> {
     type OutputType;
 }
 
-pub trait Functor<In, Out>: HKT<In, Out> {
-    fn fmap(self, f: Self::FunctionType) -> Self::OutputType;
+pub trait Functor<'a, In, Out>: HKT<In, Out> {
+    fn fmap<F>(self, f: F) -> Self::OutputType
+    where
+        F: Fn(In) -> Out + 'a;
 }
 
 pub trait Pure<T>: HKTLight<T> {
@@ -38,7 +36,7 @@ pub trait Pure<T>: HKTLight<T> {
     fn pure(x: T) -> Self::OutputType;
 }
 
-pub trait Applicative<In, Out>: Functor<In, Out> + Pure<In> {
+pub trait Applicative<'a, In, Out>: Functor<'a, In, Out> + Pure<In> {
     fn apply(self, f: Self::FunctionContextType) -> <Self as HKT<In, Out>>::OutputType;
 }
 
@@ -48,6 +46,6 @@ pub trait Return<T>: Pure<T> {
     }
 }
 
-pub trait Monad<In, Out>: Applicative<In, Out> + Return<In> {
+pub trait Monad<'a, In, Out>: Applicative<'a, In, Out> + Return<In> {
     fn bind(self, f: Self::LiftingFunctionType) -> <Self as HKT<In, Out>>::OutputType;
 }
