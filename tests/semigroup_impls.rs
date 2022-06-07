@@ -1,4 +1,5 @@
 use lubeck::traits::SemiGroup;
+use proptest::prelude::*;
 
 macro_rules! semigroup_check {
     ($T:ty) => {
@@ -7,11 +8,14 @@ macro_rules! semigroup_check {
         }
     };
     ($T:ty, $id:ident) => {
-        quickcheck::quickcheck! {
-        fn $id(a: $T, b: $T, c: $T) -> bool {
-                a.mappend(b).mappend(c)
-                    ==
-                a.mappend(b.mappend(c))
+        proptest! {
+            #![proptest_config(ProptestConfig {
+              cases: 10000, .. ProptestConfig::default()
+            })]
+
+            #[test]
+            fn $id(a: $T, b: $T, c: $T) {
+                prop_assert_eq!(a.mappend(b).mappend(c), a.mappend(b.mappend(c)))
             }
         }
     };

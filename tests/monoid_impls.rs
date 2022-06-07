@@ -1,4 +1,5 @@
 use lubeck::traits::Monoid;
+use proptest::prelude::*;
 
 macro_rules! monoid_check {
     ($T:ty) => {
@@ -7,12 +8,19 @@ macro_rules! monoid_check {
         }
     };
     ($T:ty, $left:ident, $right:ident) => {
-        quickcheck::quickcheck! {
-            fn $left(a: $T) -> bool {
-                <$T>::mempty().mappend(a) == a
+        proptest! {
+            #![proptest_config(ProptestConfig {
+              cases: 10000, .. ProptestConfig::default()
+            })]
+
+            #[test]
+            fn $left(a: $T) {
+                prop_assert_eq!(<$T>::mempty().mappend(a), a);
             }
-            fn $right(a: $T) -> bool {
-                a.mappend(<$T>::mempty()) == a
+
+            #[test]
+            fn $right(a: $T) {
+                prop_assert_eq!(a.mappend(<$T>::mempty()), a);
             }
         }
     };
