@@ -14,38 +14,28 @@ pub trait Monoid: SemiGroup {
     }
 }
 
-pub trait HKT<In, Out> {
-    type InputType;
-    type OutputType;
-    type FunctionContextType;
-    type LiftingFunctionType;
+pub trait GenType {
+    type Type<T>;
 }
 
-pub trait HKTLight<T> {
-    type OutputType;
-}
-
-pub trait Functor<'a, In, Out>: HKT<In, Out> {
-    fn fmap<F>(self, f: F) -> Self::OutputType
+pub trait Functor<A>: GenType {
+    fn fmap<F, B>(self, f: F) -> Self::Type<B>
     where
-        F: Fn(In) -> Out + 'a;
+        F: Fn(A) -> B + 'static;
 }
 
-pub trait Pure<T>: HKTLight<T> {
-    // TODO: Think about pure and if it is general enough
-    fn pure(x: T) -> Self::OutputType;
+pub trait Pure: GenType {
+    fn pure<T: 'static>(t: T) -> Self::Type<T>;
 }
 
-pub trait Applicative<'a, In, Out>: Functor<'a, In, Out> + Pure<In> {
-    fn apply(self, f: Self::FunctionContextType) -> <Self as HKT<In, Out>>::OutputType;
+pub trait Applicative<A>: Functor<A> + GenType {
+    fn app<F, B>(self, f: Self::Type<F>) -> Self::Type<B>
+    where
+        F: Fn(A) -> B + 'static;
 }
 
-pub trait Return<T>: Pure<T> {
-    fn r#return(x: T) -> <Self as HKTLight<T>>::OutputType {
-        <Self as Pure<T>>::pure(x)
-    }
-}
-
-pub trait Monad<'a, In, Out>: Applicative<'a, In, Out> + Return<In> {
-    fn bind(self, f: Self::LiftingFunctionType) -> <Self as HKT<In, Out>>::OutputType;
+pub trait Monad<A>: Functor<A> + GenType {
+    fn bind<F, B>(self, f: F) -> Self::Type<B>
+    where
+        F: Fn(A) -> Self::Type<B> + 'static;
 }

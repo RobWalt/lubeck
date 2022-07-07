@@ -1,20 +1,12 @@
-use crate::traits::{Applicative, Pure};
+use crate::traits::Applicative;
 
-use super::Reader;
+use super::def::Reader;
 
-impl<'a, R: 'a, A: Clone + 'a> Pure<A> for Reader<'a, R, A> {
-    fn pure(x: A) -> Self::OutputType {
-        Self::OutputType::reader(move |_| x.clone())
-    }
-}
-
-impl<'a, R: 'a + Clone, In: 'a + std::clone::Clone, Out: 'a> Applicative<'a, In, Out>
-    for Reader<'a, R, In>
-{
-    fn apply(
-        self,
-        f: Self::FunctionContextType,
-    ) -> <Self as crate::traits::HKT<In, Out>>::OutputType {
-        Reader::reader(move |env: R| f.run(env.clone())(self.run(env)))
+impl<R: 'static, A: 'static> Applicative<A> for Reader<R, A> {
+    fn app<F, B>(self, f: Self::Type<F>) -> Self::Type<B>
+    where
+        F: Fn(A) -> B + 'static,
+    {
+        Reader::<R, B>::new(move |env| f.run(env.clone())(self.run(env)))
     }
 }

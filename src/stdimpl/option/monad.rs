@@ -1,9 +1,10 @@
-use crate::traits::{Monad, Return, HKT};
+use crate::traits::Monad;
 
-impl<T> Return<T> for Option<T> {}
-
-impl<'a, In, Out> Monad<'a, In, Out> for Option<In> {
-    fn bind(self, f: Self::LiftingFunctionType) -> <Self as HKT<In, Out>>::OutputType {
+impl<A> Monad<A> for Option<A> {
+    fn bind<F, B>(self, f: F) -> Self::Type<B>
+    where
+        F: Fn(A) -> Self::Type<B>,
+    {
         self.and_then(f)
     }
 }

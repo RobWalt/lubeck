@@ -1,16 +1,16 @@
-use crate::traits::{Applicative, Functor, Pure, HKT};
+use crate::traits::{Applicative, Pure};
 
-impl<T> Pure<T> for Option<T> {
-    fn pure(x: T) -> Self::OutputType {
-        Some(x)
+impl<A> Pure for Option<A> {
+    fn pure<T>(t: T) -> Self::Type<T> {
+        Some(t)
     }
 }
 
-impl<'a, In, Out> Applicative<'a, In, Out> for Option<In> {
-    fn apply(self, f: Self::FunctionContextType) -> <Self as HKT<In, Out>>::OutputType {
-        match f {
-            Some(func) => self.fmap(func),
-            None => None,
-        }
+impl<A> Applicative<A> for Option<A> {
+    fn app<F, B>(self, f: Self::Type<F>) -> Self::Type<B>
+    where
+        F: Fn(A) -> B,
+    {
+        f.and_then(|f| self.map(f))
     }
 }

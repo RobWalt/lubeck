@@ -1,14 +1,12 @@
 use crate::traits::Functor;
 
-use super::Reader;
+use super::def::Reader;
 
-impl<'a, R: 'a, In: 'a, Out: 'a> Functor<'a, In, Out> for Reader<'a, R, In> {
-    fn fmap<F>(self, f: F) -> Self::OutputType
+impl<R: 'static, A: 'static> Functor<A> for Reader<R, A> {
+    fn fmap<F, B>(self, f: F) -> Self::Type<B>
     where
-        F: Fn(In) -> Out + 'a,
+        F: Fn(A) -> B + 'static,
     {
-        Self::OutputType {
-            run_reader: Box::new(move |env| f(self.run(env))),
-        }
+        Reader::<R, B>::new(move |env| f(self.run(env)))
     }
 }

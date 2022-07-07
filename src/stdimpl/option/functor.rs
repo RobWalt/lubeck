@@ -1,9 +1,9 @@
 use crate::traits::Functor;
 
-impl<'a, In, Out> Functor<'a, In, Out> for Option<In> {
-    fn fmap<F>(self, f: F) -> Self::OutputType
+impl<A> Functor<A> for Option<A> {
+    fn fmap<F, B>(self, f: F) -> Self::Type<B>
     where
-        F: Fn(In) -> Out,
+        F: Fn(A) -> B,
     {
         self.map(f)
     }

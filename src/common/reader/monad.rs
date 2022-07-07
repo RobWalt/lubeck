@@ -1,14 +1,12 @@
-use crate::traits::{Monad, Return};
+use crate::traits::Monad;
 
 use super::Reader;
 
-impl<'a, R: 'a, A: Clone + 'a> Return<A> for Reader<'a, R, A> {}
-
-impl<'a, R: 'a + Clone, In: Clone + 'a, Out: 'a> Monad<'a, In, Out> for Reader<'a, R, In> {
-    fn bind(
-        self,
-        f: Self::LiftingFunctionType,
-    ) -> <Self as crate::traits::HKT<In, Out>>::OutputType {
-        Reader::reader(move |env: R| f(self.run(env.clone())).run(env))
+impl<R: 'static, A: 'static> Monad<A> for Reader<R, A> {
+    fn bind<F, B>(self, f: F) -> Self::Type<B>
+    where
+        F: Fn(A) -> Self::Type<B> + 'static,
+    {
+        Reader::<R, B>::new(move |env| f(self.run(env.clone())).run(env))
     }
 }
