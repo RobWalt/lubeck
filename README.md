@@ -11,10 +11,10 @@ The goal of this repository is to make concepts from functional languages like
 Haskell available in Rust in form of a library while keeping them as
 easy-to-use as possible.
 
-A secondary goal is the creation of a book which not only documents the library
-and its components but at the same functions as a learning resource for people
-who want to get their feet wet with functional programming in general and have
-no prior experience.
+A secondary goal is the creation of an accompanying book. This book will not
+only document the library and its components but at the same serves as a
+learning resource. It is meant to be used by people who want to get their feet
+wet with functional programming in general and have no prior experience.
 
 # Similar crates 
 
