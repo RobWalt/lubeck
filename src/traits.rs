@@ -19,7 +19,7 @@ pub trait GenType {
 }
 
 pub trait Functor<A>: GenType {
-    fn fmap<F, B>(self, f: F) -> Self::Type<B>
+    fn fmap<F, B: 'static>(self, f: F) -> Self::Type<B>
     where
         F: Fn(A) -> B + 'static;
 }
@@ -28,14 +28,14 @@ pub trait Pure: GenType {
     fn pure<T: 'static>(t: T) -> Self::Type<T>;
 }
 
-pub trait Applicative<A>: Functor<A> + GenType {
+pub trait Applicative<A>: GenType {
     fn app<F, B>(self, f: Self::Type<F>) -> Self::Type<B>
     where
         F: Fn(A) -> B + 'static;
 }
 
 pub trait Monad<A>: Functor<A> + GenType {
-    fn bind<F, B>(self, f: F) -> Self::Type<B>
+    fn bind<F, B: 'static>(self, f: F) -> Self::Type<B>
     where
         F: Fn(A) -> Self::Type<B> + 'static;
 }
